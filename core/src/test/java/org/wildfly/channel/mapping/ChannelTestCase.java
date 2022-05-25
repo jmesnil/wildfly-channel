@@ -72,6 +72,23 @@ public class ChannelTestCase {
         }
     }
 
+    @Test()
+    public void faultyMultipleChannelsTest() throws IOException {
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        URL file = tccl.getResource("channels/faulty-multiple-channels.yaml");
+
+        try (InputStream in = file.openStream()) {
+            ChannelMapper.from(file);
+            byte[] bytes = in.readAllBytes();
+            String content = new String(bytes, Charset.defaultCharset());
+            // one channel definition out of multiple is faulty
+            // - we expect loading channels to raise exception, no channel to be loaded
+            Assertions.assertThrows(RuntimeException.class, () -> {
+                ChannelMapper.fromString(content);
+            });
+        }
+    }
+
     @Test
     public void simpleChannelTest() throws MalformedURLException {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
