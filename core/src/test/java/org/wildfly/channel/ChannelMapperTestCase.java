@@ -21,14 +21,16 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.wildfly.channel.ChannelMapper.CURRENT_SCHEMA_VERSION;
 
 public class ChannelMapperTestCase {
 
     @Test
     public void testWriteReadChannel() throws Exception {
-        final Channel channel = new Channel("test_name", "test_desc", new Vendor("test_vendor_name", Vendor.Support.COMMUNITY), Collections.emptyList(), Collections.emptyList());
+        final Channel channel = new Channel(CURRENT_SCHEMA_VERSION,"test_name", "test_desc", new Vendor("test_vendor_name", Vendor.Support.COMMUNITY), Collections.emptyList(), Collections.emptyList());
         final String yaml = ChannelMapper.toYaml(channel);
 
+        System.out.println("yaml = " + yaml);
         final Channel channel1 = ChannelMapper.fromString(yaml).get(0);
         assertEquals(Vendor.Support.COMMUNITY, channel1.getVendor().getSupport());
     }
