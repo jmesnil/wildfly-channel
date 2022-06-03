@@ -5,7 +5,7 @@
 
 [cols="1,1"]
 |===
-| Schema Version | 1.0.1 |
+| Schema Version | 2.0.0 |
 |===
 
 ### Summary
@@ -14,6 +14,14 @@ This document describes the overall architecture and concepts related to Channel
 
 ### Changelog
 
+#### Version 2.0.0
+
+* added required field `bar`. Channels that uses older versions of the schema will have this field set to
+`Injected`.
+
+#### Version 1.0.1
+
+* added optional field `foo`
 
 ## Concepts
 
@@ -51,6 +59,8 @@ A channel is composed of several fields:
 * A required `name` to identify the vendor (eg `WildFly Community Project`)
 * An optional `foo` field to do something
 ** Introduced in the schema version `1.0.1`
+* An required `bar` field to do something else
+** Introduced in the schema version `2.0.0`
 * A required `support` type that accepts the following values:
 ** `supported` - Components provided by this channel are supported by the vendor. Some features provided by this channel can still be considered as tech-preview.
 ** `tech-preview` - Feature provided by this channel are Tech Preview by the vendor

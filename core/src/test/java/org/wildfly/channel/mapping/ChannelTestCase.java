@@ -103,6 +103,7 @@ public class ChannelTestCase {
     @Test
     public void channelWithoutStreams() {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "name: My Channel\n" +
                 "description: |-\n" +
                 "  This is my channel\n" +
@@ -115,8 +116,9 @@ public class ChannelTestCase {
 
     @Test
     public void channelWithRequires() {
-        List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n"
-                +"name: My Channel\n" +
+        List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
+                "name: My Channel\n" +
                 "description: |-\n" +
                 "  This is my channel\n" +
                 "  with no stream\n" +

@@ -31,6 +31,7 @@ public class StreamResolverTestCase {
     public void testFindingStreamMatchingArtifactIdAndGroupId() {
 
         String yamlContent = "schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: io.undertow\n" +
                 "    artifactId: '*'\n" +

@@ -20,6 +20,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
+import static org.wildfly.channel.ChannelMapper.SCHEMA_VERSION_1_0_0;
+import static org.wildfly.channel.ChannelMapper.SCHEMA_VERSION_1_0_1;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -61,6 +63,11 @@ public class Channel implements AutoCloseable {
     private final String foo;
 
     /**
+     * Required field.
+     */
+    private String bar;
+
+    /**
      * Description of the channel. It can use multiple lines.
      * This is an optional field.
      */
@@ -93,6 +100,7 @@ public class Channel implements AutoCloseable {
     public Channel(@JsonProperty(value = "schemaVersion") String schemaVersion,
                    @JsonProperty(value = "name") String name,
                    @JsonProperty(value = "foo") String foo,
+                   @JsonProperty(value = "bar") String bar,
                    @JsonProperty(value = "description") String description,
                    @JsonProperty(value = "vendor") Vendor vendor,
                    @JsonProperty(value = "requires")
@@ -101,6 +109,7 @@ public class Channel implements AutoCloseable {
         this.schemaVersion = schemaVersion;
         this.name = name;
         this.foo = foo;
+        this.bar = bar;
         this.description = description;
         this.vendor = vendor;
         this.channelRequirements = (channelRequirements != null) ? channelRequirements : emptyList();
@@ -108,8 +117,16 @@ public class Channel implements AutoCloseable {
         if (streams != null) {
             this.streams.addAll(streams);
         }
+        validate();
     }
 
+    private void validate() {
+        if (bar == null) {
+            if (schemaVersion.equals(SCHEMA_VERSION_1_0_0) || schemaVersion.equals(SCHEMA_VERSION_1_0_1))
+            System.out.println("The bar field is now required since 2.0.2. This channel used an older version and will be updated to match the current version");
+            bar = "Injected";
+        }
+    }
     @JsonInclude
     public String getSchemaVersion() {
         return schemaVersion;
@@ -118,6 +135,11 @@ public class Channel implements AutoCloseable {
     @JsonInclude(NON_NULL)
     public String getFoo() {
         return foo;
+    }
+
+    @JsonInclude(NON_NULL)
+    public String getBar() {
+        return bar;
     }
 
     @JsonInclude(NON_NULL)

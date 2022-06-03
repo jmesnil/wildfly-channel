@@ -44,6 +44,7 @@ public class ChannelRecorderTestCase {
 
         List<Channel> channels = ChannelMapper.fromString("---\n" +
                 "schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
                 "    artifactId: '*'\n" +

@@ -60,6 +60,7 @@ public class ChannelWithRequirementsTestCase {
                 .thenReturn(resolvedArtifactFile);
 
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "name: My Channel\n" +
                 "requires:\n" +
                 "  - groupId: org.foo\n" +
@@ -98,6 +99,7 @@ public class ChannelWithRequirementsTestCase {
                 .thenReturn(resolvedArtifactFile);
 
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "name: My Channel\n" +
                 "requires:\n" +
                 "  - groupId: org.foo\n" +

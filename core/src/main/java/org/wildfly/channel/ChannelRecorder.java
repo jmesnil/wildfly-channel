@@ -23,6 +23,7 @@ class ChannelRecorder {
     final Channel recordedChannel = new Channel(ChannelMapper.CURRENT_SCHEMA_VERSION,
             null,
             null,
+            "bar",
             null,
             null,
             null,

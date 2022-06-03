@@ -43,6 +43,7 @@ public class ChannelSessionTestCase {
     public void testFindLatestMavenArtifactVersion() throws UnresolvedMavenArtifactException {
         List<Channel> channels = ChannelMapper.fromString(
                 "schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                        "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
                 "    artifactId: '*'\n" +
@@ -67,6 +68,7 @@ public class ChannelSessionTestCase {
     @Test
     public void testFindLatestMavenArtifactVersionThrowsUnresolvedMavenArtifactException() throws UnresolvedMavenArtifactException {
         List<Channel> channels = ChannelMapper.fromString(                "schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
                 "    artifactId: '*'\n" +
@@ -95,6 +97,7 @@ public class ChannelSessionTestCase {
     @Test
     public void testResolveLatestMavenArtifact() throws UnresolvedMavenArtifactException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
                 "    artifactId: '*'\n" +
@@ -129,7 +132,7 @@ public class ChannelSessionTestCase {
     @Test
     public void testResolveLatestMavenArtifactThrowUnresolvedMavenArtifactException() {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
-                "schemaVersion: 1.0.0\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
                 "    artifactId: '*'\n" +
@@ -158,6 +161,7 @@ public class ChannelSessionTestCase {
     @Test
     public void testResolveDirectMavenArtifact() throws UnresolvedMavenArtifactException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
+                "bar: very important\n" +
                 "streams:\n" +
                 "  - groupId: org.foo\n" +
                 "    artifactId: foo\n" +

@@ -1,6 +1,7 @@
 schemaVersion: "2.0.0"
 name: My Channel
-bar: very important
+foo: Whatever
+bar: Very important
 description: |-
   This is my channel
   with my stuff

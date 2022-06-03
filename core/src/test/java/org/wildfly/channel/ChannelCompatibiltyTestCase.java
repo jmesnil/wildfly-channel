@@ -36,6 +36,7 @@ public class ChannelCompatibiltyTestCase {
         URL file = tccl.getResource("channels/versions/channel_1.0.0.yaml");
         Channel channel = ChannelMapper.from(file);
         assertNull(channel.getFoo());
+        assertEquals("Injected", channel.getBar());
     }
 
     @Test
@@ -44,5 +45,15 @@ public class ChannelCompatibiltyTestCase {
         URL file = tccl.getResource("channels/versions/channel_1.0.1.yaml");
         Channel channel = ChannelMapper.from(file);
         assertEquals("Whatever", channel.getFoo());
+        assertEquals("Injected", channel.getBar());
+    }
+
+    @Test
+    public void testReadChannel_2_0_0() throws Exception {
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        URL file = tccl.getResource("channels/versions/channel_2.0.0.yaml");
+        Channel channel = ChannelMapper.from(file);
+        assertEquals("Whatever", channel.getFoo());
+        assertEquals("Very important", channel.getBar());
     }
 }

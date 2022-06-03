@@ -27,7 +27,7 @@ public class ChannelMapperTestCase {
 
     @Test
     public void testWriteReadChannel() throws Exception {
-        final Channel channel = new Channel(CURRENT_SCHEMA_VERSION,"test_name", "foo", "test_desc", new Vendor("test_vendor_name", Vendor.Support.COMMUNITY), Collections.emptyList(), Collections.emptyList());
+        final Channel channel = new Channel(CURRENT_SCHEMA_VERSION,"test_name", "foo", "bar", "test_desc", new Vendor("test_vendor_name", Vendor.Support.COMMUNITY), Collections.emptyList(), Collections.emptyList());
         final String yaml = ChannelMapper.toYaml(channel);
 
         System.out.println("yaml = " + yaml);
