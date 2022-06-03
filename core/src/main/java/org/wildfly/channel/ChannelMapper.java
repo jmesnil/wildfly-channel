@@ -58,7 +58,7 @@ public class ChannelMapper {
     private static final String SCHEMA_1_0_0_FILE = "org/wildfly/channel/channel-schema-1.0.0.json";
     private static final YAMLFactory YAML_FACTORY = new YAMLFactory();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(YAML_FACTORY);
-    private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(OBJECT_MAPPER).build();
+    private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)).objectMapper(OBJECT_MAPPER).build();
     private static final Map<String, JsonSchema> SCHEMAS = new HashMap<>();
 
     static {

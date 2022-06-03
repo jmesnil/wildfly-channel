@@ -1,6 +1,6 @@
 {
-  "$id": "https://wildfly.org/channel.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://wildfly.org/channels/v2.0.0/schema.json",
   "type": "object",
   "required": ["schemaVersion", "bar"],
   "properties": {
