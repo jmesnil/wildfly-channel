@@ -58,6 +58,8 @@ public class Channel implements AutoCloseable {
      */
     private final String name;
 
+    private final String foo;
+
     /**
      * Description of the channel. It can use multiple lines.
      * This is an optional field.
@@ -90,6 +92,7 @@ public class Channel implements AutoCloseable {
 
     public Channel(@JsonProperty(value = "schemaVersion", required = true) String schemaVersion,
                    @JsonProperty(value = "name") String name,
+                   @JsonProperty(value = "foo") String foo,
                    @JsonProperty(value = "description") String description,
                    @JsonProperty(value = "vendor") Vendor vendor,
                    @JsonProperty(value = "requires")
@@ -97,6 +100,7 @@ public class Channel implements AutoCloseable {
                    @JsonProperty(value = "streams") Collection<Stream> streams) {
         this.schemaVersion = schemaVersion;
         this.name = name;
+        this.foo = foo;
         this.description = description;
         this.vendor = vendor;
         this.channelRequirements = (channelRequirements != null) ? channelRequirements : emptyList();
@@ -109,6 +113,11 @@ public class Channel implements AutoCloseable {
     @JsonInclude
     public String getSchemaVersion() {
         return schemaVersion;
+    }
+
+    @JsonInclude(NON_NULL)
+    public String getFoo() {
+        return foo;
     }
 
     @JsonInclude(NON_NULL)

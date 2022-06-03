@@ -5,7 +5,7 @@
 
 [cols="1,1"]
 |===
-| Schema Version | 1.0.0 |
+| Schema Version | 1.0.1 |
 |===
 
 ### Summary
@@ -46,6 +46,8 @@ A channel is composed of several fields:
 * An optional `description` that provides human-readable description of the channel
 * An optional `vendor` that defines who provides the channel and their support level. This field is descriptive only and is not used to enforce any mechanism. This field is composed of:
 * A required `name` to identify the vendor (eg `WildFly Community Project`)
+* An optional `foo` field to do something
+** Introduced in the schema version `1.0.1`
 * A required `support` type that accepts the following values:
 ** `supported` - Components provided by this channel are supported by the vendor. Some features provided by this channel can still be considered as tech-preview.
 ** `tech-preview` - Feature provided by this channel are Tech Preview by the vendor
@@ -73,7 +75,7 @@ A JSON Schema is provided to validate that channels comply with the model descri
 
 ## Channel Representation
 
-A channel is specified in the YAML language with a link:../core/src/main/resources/org/wildfly/channel/v1.0.0./schema.json[corresponding JSON schema] to validate its structure.
+A channel is specified in the YAML language with a link:../core/src/main/resources/org/wildfly/channel/v1.0.1/schema.json[corresponding JSON schema] to validate its structure.
 
 ### Channel Actions and Responsibilities
 
@@ -113,6 +115,10 @@ If the stream defines a `versionPattern`, the version will be determined by quer
 Maven repositories and use the latest version that matches the pattern. If no version matches the pattern, an error is returned to the caller.
 
 ### Changelog
+
+### Version 1.0.1
+
+* Add optional field `foo`
 
 ### Version 1.0.0
 

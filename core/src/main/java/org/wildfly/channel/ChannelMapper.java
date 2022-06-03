@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import com.networknt.schema.JsonSchema;
@@ -49,15 +48,19 @@ import com.networknt.schema.ValidationMessage;
 public class ChannelMapper {
 
     public static final String SCHEMA_VERSION_1_0_0 = "1.0.0";
-    public static final String CURRENT_SCHEMA_VERSION = SCHEMA_VERSION_1_0_0;
+    public static final String SCHEMA_VERSION_1_0_1 = "1.0.1";
+    public static final String CURRENT_SCHEMA_VERSION = SCHEMA_VERSION_1_0_1;
 
     private static final String SCHEMA_1_0_0_FILE = "org/wildfly/channel/v1.0.0/schema.json";
+    private static final String SCHEMA_1_0_1_FILE = "org/wildfly/channel/v1.0.1/schema.json";
+
     private static final YAMLFactory YAML_FACTORY = new YAMLFactory();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(YAML_FACTORY);
     private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)).objectMapper(OBJECT_MAPPER).build();
     private static final Map<String, JsonSchema> SCHEMAS = new HashMap<>();
 
     static {
+        SCHEMAS.put(SCHEMA_VERSION_1_0_1, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_1_0_1_FILE)));
         SCHEMAS.put(SCHEMA_VERSION_1_0_0, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_1_0_0_FILE)));
     }
 

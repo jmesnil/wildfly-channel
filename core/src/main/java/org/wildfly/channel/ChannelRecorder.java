@@ -25,6 +25,7 @@ class ChannelRecorder {
             null,
             null,
             null,
+            null,
             Collections.emptyList());
 
     void recordStream(String groupId, String artifactId, String version) {
