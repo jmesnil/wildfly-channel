@@ -3,9 +3,17 @@
 
 ## WildFly Channels
 
+[cols="1,1"]
+|===
+| Schema Version | 1.0.0 |
+|===
+
 ### Summary
 
 This document describes the overall architecture and concepts related to Channels to provision WildFly.
+
+### Changelog
+
 
 ## Concepts
 
@@ -68,7 +76,7 @@ A JSON Schema is provided to validate that channels comply with the model descri
 
 ## Channel Representation
 
-A channel is specified in the YAML language with a link:../core/src/main/resources/org/wildfly/channel/channel-schema.json[corresponding JSON schema] to validate its structure.
+A channel is specified in the YAML language with a link:../core/src/main/resources/org/wildfly/channel/channel-schema-1.0.0.json[corresponding JSON schema] to validate its structure.
 
 ### Channel Actions and Responsibilities
 

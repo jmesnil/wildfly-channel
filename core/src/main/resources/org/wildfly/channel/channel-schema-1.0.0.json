@@ -2,7 +2,13 @@
   "$id": "https://wildfly.org/channel.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "required": ["schemaVersion"],
   "properties": {
+    "schemaVersion": {
+      "description": "The version number of the schema in model.revision.addition format. ",
+      "type": "string",
+      "pattern": "^[0-9]+.[0-9]+.[0-9]+$"
+    },
     "name": {
       "description": "Name of the channel. This is a one-line human-readable description of the channel",
       "type": "string"
