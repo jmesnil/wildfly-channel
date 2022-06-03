@@ -5,7 +5,7 @@
 
 [cols="1,1"]
 |===
-| Schema Version | 1.0.0 |
+| Schema Version | 1.0.1 |
 |===
 
 ### Summary
@@ -49,6 +49,8 @@ A channel is composed of several fields:
 * An optional `description` that provides human-readable description of the channel
 * An optional `vendor` that defines who provides the channel and their support level. This field is descriptive only and is not used to enforce any mechanism. This field is composed of:
 * A required `name` to identify the vendor (eg `WildFly Community Project`)
+* An optional `foo` field to do something
+** Introduced in the schema version `1.0.1`
 * A required `support` type that accepts the following values:
 ** `supported` - Components provided by this channel are supported by the vendor. Some features provided by this channel can still be considered as tech-preview.
 ** `tech-preview` - Feature provided by this channel are Tech Preview by the vendor

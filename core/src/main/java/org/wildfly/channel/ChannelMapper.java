@@ -47,9 +47,11 @@ import com.networknt.schema.ValidationMessage;
  */
 public class ChannelMapper {
 
+    private static String SCHEMA_VERSION_1_0_1 = "1.0.1";
     private static String SCHEMA_VERSION_1_0_0 = "1.0.0";
-    public static String CURRENT_SCHEMA_VERSION = SCHEMA_VERSION_1_0_0;
+    public static String CURRENT_SCHEMA_VERSION = SCHEMA_VERSION_1_0_1;
 
+    private static final String SCHEMA_1_0_1_FILE = "org/wildfly/channel/channel-schema-1.0.1.json";
     private static final String SCHEMA_1_0_0_FILE = "org/wildfly/channel/channel-schema-1.0.0.json";
     private static final YAMLFactory YAML_FACTORY = new YAMLFactory();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(YAML_FACTORY);
@@ -57,6 +59,7 @@ public class ChannelMapper {
     private static final Map<String, JsonSchema> SCHEMAS = new HashMap<>();
 
     static {
+        SCHEMAS.put(SCHEMA_VERSION_1_0_1, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_1_0_1_FILE)));
         SCHEMAS.put(SCHEMA_VERSION_1_0_0, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_1_0_0_FILE)));
     }
 
