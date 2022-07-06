@@ -68,7 +68,7 @@
         "type": "object",
         "properties": {
           "groupId": {
-            "description": "GroupId of the stream. It must be a valid groupId (corresponding to a G of a Maven GAV)",
+            "description": "GroupId of the stream. It must be a valid groupId (corresponding to a G of a Maven GAV) or the * character to represent any groupId",
             "type": "string"
           },
           "artifactId": {

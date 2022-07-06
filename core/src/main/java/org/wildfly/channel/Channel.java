@@ -307,6 +307,11 @@ public class Channel implements AutoCloseable {
         }
         // check if there is a stream for groupId:*
         stream = streams.stream().filter(s -> s.getGroupId().equals(groupId) && s.getArtifactId().equals("*")).findFirst();
+        if (stream.isPresent()) {
+            return stream;
+        }
+        // check if there is a stream for *:*
+        stream = streams.stream().filter(s -> s.getGroupId().equals("*") && s.getArtifactId().equals("*")).findFirst();
         return stream;
     }
 

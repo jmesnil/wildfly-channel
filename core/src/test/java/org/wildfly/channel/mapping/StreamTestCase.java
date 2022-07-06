@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -66,13 +67,13 @@ public class StreamTestCase {
     }
 
     @Test
-    public void testAnyGroupIdIsNotValid() throws IOException {
-        assertThrows(Exception.class, () -> {
-
-            fromYamlContent("groupId: '*'\n" +
-                    "artifactId: '*'\n" +
-                    "version: 1.1.1.Final");
-        });
+    public void testLatestVersionForAnyStream() throws IOException {
+        Stream stream =    fromYamlContent("groupId: '*'\n" +
+                "artifactId: '*'\n" +
+                "versionPattern: .*");
+        assertEquals("*", stream.getGroupId());
+        assertEquals("*", stream.getArtifactId());
+        assertEquals(".*", stream.getVersionPattern().pattern());
     }
 
     @Test
