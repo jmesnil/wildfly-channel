@@ -215,10 +215,12 @@ public class Channel implements AutoCloseable {
     static class ResolveLatestVersionResult {
         final String version;
         final Channel channel;
+        final Stream stream;
 
-        ResolveLatestVersionResult(String version, Channel channel) {
+        ResolveLatestVersionResult(String version, Channel channel, Stream stream) {
             this.version = version;
             this.channel = channel;
+            this.stream = stream;
         }
     }
 
@@ -234,16 +236,16 @@ public class Channel implements AutoCloseable {
         // no stream for this artifact, let's look into the required channel
         if (!foundStream.isPresent()) {
             // we return the latest value from the required channels
-            Map<String, Channel> foundVersions = new HashMap<>();
+            Map<String, Channel.ResolveLatestVersionResult> foundVersions = new HashMap<>();
             for (Channel requiredChannel : requiredChannels) {
                 Optional<Channel.ResolveLatestVersionResult> found = requiredChannel.resolveLatestVersion(groupId, artifactId, extension, classifier);
                 if (found.isPresent()) {
-                    foundVersions.put(found.get().version, found.get().channel);
+                    foundVersions.put(found.get().version, found.get());
                 }
             }
             Optional<String> foundVersionInRequiredChannels = foundVersions.keySet().stream().sorted(VersionMatcher.COMPARATOR.reversed()).findFirst();
             if (foundVersionInRequiredChannels.isPresent()) {
-                return Optional.of(new ResolveLatestVersionResult(foundVersionInRequiredChannels.get(), foundVersions.get(foundVersionInRequiredChannels.get())));
+                return Optional.of(foundVersions.get(foundVersionInRequiredChannels.get()));
             }
             return Optional.empty();
         }
@@ -260,7 +262,7 @@ public class Channel implements AutoCloseable {
         }
 
         if (foundVersion.isPresent()) {
-            return Optional.of(new ResolveLatestVersionResult(foundVersion.get(), this));
+            return Optional.of(new ResolveLatestVersionResult(foundVersion.get(), this, stream));
         }
         return Optional.empty();
     }
@@ -276,6 +278,7 @@ public class Channel implements AutoCloseable {
         }
     }
 
+    // FIXME [JFM] current code is buggy, we will resolve the artifact from this channel even if there are not streams matching the artifacts. I don't understand that code.
     ResolveArtifactResult resolveArtifact(String groupId, String artifactId, String extension, String classifier, String version) throws UnresolvedMavenArtifactException {
         requireNonNull(groupId);
         requireNonNull(artifactId);
