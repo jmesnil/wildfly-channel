@@ -24,16 +24,25 @@ import static org.mockito.Mockito.when;
 import static org.wildfly.channel.ChannelMapper.CURRENT_SCHEMA_VERSION;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.wildfly.channel.spi.MavenVersionsResolver;
 
 public class ChannelWithRequirementsTestCase {
+
+    private static File emptyFile;
+
+    @BeforeAll
+    static void setup() throws IOException {
+        emptyFile = File.createTempFile("ChannelWithRequirementsTestCase", ".jar");
+    }
 
     /**
      * Test that newest version of required channel is used when required channel version is not specified
@@ -47,7 +56,7 @@ public class ChannelWithRequirementsTestCase {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         URL resolvedRequiredChannelURL = tccl.getResource("channels/required-channel.yaml");
         File resolvedRequiredChannelFile = Paths.get(resolvedRequiredChannelURL.toURI()).toFile();
-        File resolvedArtifactFile = mock(File.class);
+        File resolvedArtifactFile = emptyFile;
 
         when(factory.create())
                 .thenReturn(resolver);
@@ -94,7 +103,7 @@ public class ChannelWithRequirementsTestCase {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         URL resolvedRequiredChannelURL = tccl.getResource("channels/required-channel.yaml");
         File resolvedRequiredChannelFile = Paths.get(resolvedRequiredChannelURL.toURI()).toFile();
-        File resolvedArtifactFile = mock(File.class);
+        File resolvedArtifactFile = emptyFile;
 
         when(factory.create())
                 .thenReturn(resolver);
@@ -133,7 +142,7 @@ public class ChannelWithRequirementsTestCase {
      * Then requiring channel version then MUST be used in resolution.
      */
     @Test
-    public void testRequiringChannelOverridesStreamFromRequiredChannel() throws UnresolvedMavenArtifactException, URISyntaxException {
+    public void testRequiringChannelOverridesStreamFromRequiredChannel() throws UnresolvedMavenArtifactException, URISyntaxException, IOException {
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
 
@@ -141,9 +150,9 @@ public class ChannelWithRequirementsTestCase {
         URL resolvedRequiredChannelURL = tccl.getResource("channels/required-channel.yaml");
         File resolvedRequiredChannelFile = Paths.get(resolvedRequiredChannelURL.toURI()).toFile();
 
-        File resolvedArtifactFile120Final = mock(File.class);
-        File resolvedArtifactFile200Final = mock(File.class);
-        File resolvedArtifactFile100Final = mock(File.class);
+        File resolvedArtifactFile120Final = emptyFile;
+        File resolvedArtifactFile200Final = emptyFile;
+        File resolvedArtifactFile100Final = emptyFile;
 
         when(factory.create())
                 .thenReturn(resolver);
@@ -276,19 +285,19 @@ public class ChannelWithRequirementsTestCase {
                 .thenReturn(Set.of("1.0.0.Final", "2.0.0.Final"));
 
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "1.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "1.2.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "2.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-required-channel", null, null, "1.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-required-channel", null, null, "2.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-second-level", null, null, "1.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-second-level", null, null, "2.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
 
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                         "name: root level requiring channel\n"+
@@ -411,15 +420,15 @@ public class ChannelWithRequirementsTestCase {
                 .thenReturn(Set.of("1.0.0.Final", "2.0.0.Final"));
 
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "1.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "1.2.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "foo-bar", null, null, "2.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-required-channel", null, null, "1.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
         when(resolver.resolveArtifact("org.example", "im-only-in-required-channel", null, null, "2.0.0.Final"))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
 
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                 "name: root level requiring channel\n" +

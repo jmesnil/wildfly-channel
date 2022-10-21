@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 import static org.wildfly.channel.ChannelMapper.CURRENT_SCHEMA_VERSION;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +103,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveLatestMavenArtifact() throws UnresolvedMavenArtifactException {
+    public void testResolveLatestMavenArtifact() throws UnresolvedMavenArtifactException, IOException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                 "streams:\n" +
                 "  - groupId: org.wildfly\n" +
@@ -113,7 +114,7 @@ public class ChannelSessionTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
-        File resolvedArtifactFile = mock(File.class);
+        File resolvedArtifactFile = File.createTempFile("resolvedArtifactFile", ".jar");
 
         when(factory.create()).thenReturn(resolver);
         when(resolver.getAllVersions("org.wildfly", "wildfly-ee-galleon-pack", null, null)).thenReturn(Set.of("25.0.0.Final", "25.0.1.Final"));
@@ -165,7 +166,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveDirectMavenArtifact() throws UnresolvedMavenArtifactException {
+    public void testResolveDirectMavenArtifact() throws UnresolvedMavenArtifactException, IOException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                 "streams:\n" +
                 "  - groupId: org.foo\n" +
@@ -203,7 +204,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveMavenArtifactsFromOneChannel() throws UnresolvedMavenArtifactException {
+    public void testResolveMavenArtifactsFromOneChannel() throws UnresolvedMavenArtifactException, IOException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                                                              "streams:\n" +
                                                              "  - groupId: org.foo\n" +
@@ -218,8 +219,8 @@ public class ChannelSessionTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
-        File resolvedArtifactFile1 = mock(File.class);
-        File resolvedArtifactFile2 = mock(File.class);
+        File resolvedArtifactFile1 = File.createTempFile("resolvedArtifactFile1", ".jar");
+        File resolvedArtifactFile2 = File.createTempFile("resolvedArtifactFile2", ".jar");
 
         when(factory.create()).thenReturn(resolver);
         final List<ArtifactCoordinate> coordinates = asList(
@@ -251,7 +252,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveMavenArtifactsFromTwoChannel() throws UnresolvedMavenArtifactException {
+    public void testResolveMavenArtifactsFromTwoChannel() throws UnresolvedMavenArtifactException, IOException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                                                              "streams:\n" +
                                                              "  - groupId: org.foo\n" +
@@ -269,13 +270,13 @@ public class ChannelSessionTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
-        File resolvedArtifactFile1 = mock(File.class);
-        File resolvedArtifactFile2 = mock(File.class);
+        File resolvedArtifactFile1 = File.createTempFile("resolvedArtifactFile1", ".jar");
+        File resolvedArtifactFile2 = File.createTempFile("resolvedArtifactFile2", ".jar");
 
         when(factory.create()).thenReturn(resolver);
         final List<ArtifactCoordinate> coordinates = asList(
-           new ArtifactCoordinate("org.foo", "foo", null, null, "1.0.0"),
-           new ArtifactCoordinate("org.bar", "bar", null, null, "1.0.0"));
+           new ArtifactCoordinate("org.foo", "foo", "jar", null, "1.0.0"),
+           new ArtifactCoordinate("org.bar", "bar", "jar", null, "1.0.0"));
         when(resolver.resolveArtifacts(any()))
            .then(new Answer<List<File>>() {
                @Override
@@ -298,8 +299,8 @@ public class ChannelSessionTestCase {
             assertNotNull(resolved);
 
             final List<MavenArtifact> expected = asList(
-               new MavenArtifact("org.foo", "foo", null, null, "25.0.0.Final", resolvedArtifactFile1),
-               new MavenArtifact("org.bar", "bar", null, null, "26.0.0.Final", resolvedArtifactFile2)
+               new MavenArtifact("org.foo", "foo", "jar", null, "25.0.0.Final", resolvedArtifactFile1),
+               new MavenArtifact("org.bar", "bar", "jar", null, "26.0.0.Final", resolvedArtifactFile2)
             );
             assertContainsAll(expected, resolved);
 
@@ -315,7 +316,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveDirectMavenArtifacts() throws UnresolvedMavenArtifactException {
+    public void testResolveDirectMavenArtifacts() throws UnresolvedMavenArtifactException, IOException {
         List<Channel> channels = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                                                              "streams:\n" +
                                                              "  - groupId: org.not\n" +
@@ -326,8 +327,8 @@ public class ChannelSessionTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
-        File resolvedArtifactFile1 = mock(File.class);
-        File resolvedArtifactFile2 = mock(File.class);
+        File resolvedArtifactFile1 = File.createTempFile("resolvedArtifactFile1", ".txt");
+        File resolvedArtifactFile2 = File.createTempFile("resolvedArtifactFile2", ".txt");
 
         when(factory.create()).thenReturn(resolver);
         final List<ArtifactCoordinate> coordinates = asList(
@@ -359,7 +360,7 @@ public class ChannelSessionTestCase {
     }
 
     @Test
-    public void testResolveMavenArtifactsFromTwoChannelsWithSameStream() throws UnresolvedMavenArtifactException {
+    public void testResolveMavenArtifactsFromTwoChannelsWithSameStream() throws UnresolvedMavenArtifactException, IOException {
         Channel channel1 = ChannelMapper.fromString("schemaVersion: " + CURRENT_SCHEMA_VERSION + "\n" +
                 "streams:\n" +
                 "  - groupId: org.foo\n" +
@@ -377,7 +378,7 @@ public class ChannelSessionTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
-        File resolvedArtifactFile = mock(File.class);
+        File resolvedArtifactFile = File.createTempFile("resolvedArtifactFile", ".jar");
 
         when(factory.create()).thenReturn(resolver);
         when(resolver.resolveArtifact(eq("org.foo"), eq("foo"), eq(null), eq(null), anyString())).thenReturn(resolvedArtifactFile);

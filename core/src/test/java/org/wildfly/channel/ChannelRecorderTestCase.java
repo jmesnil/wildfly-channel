@@ -65,6 +65,7 @@ public class ChannelRecorderTestCase {
 
         MavenVersionsResolver.Factory factory = mock(MavenVersionsResolver.Factory.class);
         MavenVersionsResolver resolver = mock(MavenVersionsResolver.class);
+        File emptyFile = File.createTempFile("empty", ".jar");
 
         when(factory.create())
                 .thenReturn(resolver);
@@ -75,7 +76,7 @@ public class ChannelRecorderTestCase {
         when(resolver.getAllVersions(eq("io.undertow"), anyString(), eq(null), eq(null)))
                 .thenReturn(Set.of("2.1.0.Final", "2.2.0.Final"));
         when(resolver.resolveArtifact(anyString(), anyString(), eq(null), eq(null), anyString()))
-                .thenReturn(mock(File.class));
+                .thenReturn(emptyFile);
 
         try (ChannelSession session = new ChannelSession(channels, factory)) {
             session.resolveMavenArtifact("org.wildfly", "wildfly-ee-galleon-pack", null, null, "20.0.0.Final");
