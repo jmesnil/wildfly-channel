@@ -35,10 +35,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
@@ -54,9 +54,9 @@ public class Blocklist extends VersionedMapper {
    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(YAML_FACTORY)
       .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
       .configure(ORDER_MAP_ENTRIES_BY_KEYS, true);
-   private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)).jsonMapper(OBJECT_MAPPER).build();
+   private static final SchemaRegistry SCHEMA_FACTORY = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2019_09);
 
-   private static final Map<String, JsonSchema> SCHEMAS = new HashMap<>();
+   private static final Map<String, Schema> SCHEMAS = new HashMap<>();
 
    static {
       SCHEMAS.put(SCHEMA_VERSION_1_0_0, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_1_0_0_FILE)));
@@ -120,23 +120,23 @@ public class Blocklist extends VersionedMapper {
       return Collections.emptySet();
    }
 
-   private static List<String> validate(URL url) throws IOException {
-      try (InputStream input = UrlContentLoader.openStream(url)) {
-         JsonNode node = OBJECT_MAPPER.readTree(input);
-         JsonSchema schema = getSchema(node);
-         schema.initializeValidators();
-         Set<ValidationMessage> validationMessages = schema.validate(node);
-         return validationMessages.stream().map(ValidationMessage::getMessage).collect(Collectors.toList());
-      }
-   }
+    private static List<String> validate(URL url) throws IOException {
+        try (InputStream input = UrlContentLoader.openStream(url)) {
+            JsonNode node = OBJECT_MAPPER.readTree(input);
+            Schema schema = getSchema(node);
+            schema.initializeValidators();
+            List<Error> validationMessages = schema.validate(node);
+            return validationMessages.stream().map(Error::getMessage).collect(Collectors.toList());
+        }
+    }
 
-   private static JsonSchema getSchema(JsonNode node) {
+   private static Schema getSchema(JsonNode node) {
       JsonNode schemaVersion = node.path("schemaVersion");
       String version = schemaVersion.asText();
       if (version == null || version.isEmpty()) {
          throw new InvalidChannelMetadataException("Invalid Blocklist", List.of("The blocklist definition does not specify a schemaVersion."));
       }
-      JsonSchema schema = getSchema(version, SCHEMAS);
+      Schema schema = getSchema(version, SCHEMAS);
       if (schema == null) {
          throw new InvalidChannelMetadataException("Invalid Manifest", List.of("Unknown schema version " + schemaVersion));
       }

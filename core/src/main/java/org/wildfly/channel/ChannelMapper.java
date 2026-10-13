@@ -39,10 +39,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 import org.wildfly.channel.proxy.HttpProxy;
 
 /**
@@ -65,8 +65,8 @@ public class ChannelMapper extends VersionedMapper {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(YAML_FACTORY)
             .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(ORDER_MAP_ENTRIES_BY_KEYS, true);
-    private static final JsonSchemaFactory SCHEMA_FACTORY = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)).jsonMapper(OBJECT_MAPPER).build();
-    private static final Map<String, JsonSchema> SCHEMAS = new HashMap<>();
+    private static final SchemaRegistry SCHEMA_FACTORY = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2019_09);
+    private static final Map<String, Schema> SCHEMAS = new HashMap<>();
 
     static {
         if (Boolean.getBoolean("org.wildfly.channel.enable-proxy")) {
@@ -77,14 +77,14 @@ public class ChannelMapper extends VersionedMapper {
         SCHEMAS.put(SCHEMA_VERSION_2_1_0, SCHEMA_FACTORY.getSchema(ChannelMapper.class.getClassLoader().getResourceAsStream(SCHEMA_2_1_0_FILE)));
     }
 
-    private static JsonSchema getSchema(JsonNode node) {
+    private static Schema getSchema(JsonNode node) {
         JsonNode schemaVersion = node.path("schemaVersion");
         String version = schemaVersion.asText();
         if (version == null || version.isEmpty()) {
             throw new InvalidChannelMetadataException("Invalid Channel", List.of("The channel definition does not specify a schemaVersion."));
         }
 
-        final JsonSchema schema = getSchema(version, SCHEMAS);
+        final Schema schema = getSchema(version, SCHEMAS);
         if (schema == null) {
             throw new InvalidChannelMetadataException("Invalid Channel", List.of("Unknown schema version " + schemaVersion));
         }
@@ -144,17 +144,17 @@ public class ChannelMapper extends VersionedMapper {
     private static List<String> validate(URL url) throws IOException {
         try (InputStream input = UrlContentLoader.openStream(url)) {
             JsonNode node = OBJECT_MAPPER.readTree(input);
-            JsonSchema schema = getSchema(node);
-            Set<ValidationMessage> validationMessages = schema.validate(node);
-            return validationMessages.stream().map(ValidationMessage::getMessage).collect(Collectors.toList());
+            Schema schema = getSchema(node);
+            List<Error> validationMessages = schema.validate(node);
+            return validationMessages.stream().map(Error::getMessage).collect(Collectors.toList());
         }
     }
 
     private static List<String> validateString(String yamlContent) throws IOException {
         JsonNode node = OBJECT_MAPPER.readTree(yamlContent);
-        JsonSchema schema = getSchema(node);
-        Set<ValidationMessage> validationMessages = schema.validate(node);
-        return validationMessages.stream().map(ValidationMessage::getMessage).collect(Collectors.toList());
+        Schema schema = getSchema(node);
+        List<Error> validationMessages = schema.validate(node);
+        return validationMessages.stream().map(Error::getMessage).collect(Collectors.toList());
     }
 
     private static InvalidChannelMetadataException wrapException(Exception e) {
