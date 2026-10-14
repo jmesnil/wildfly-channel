@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import com.networknt.schema.JsonSchema;
+import com.networknt.schema.Schema;
 import org.jboss.logging.Logger;
 import org.wildfly.channel.version.VersionMatcher;
 
@@ -12,7 +12,7 @@ abstract class VersionedMapper {
 
     private static final Logger LOG = Logger.getLogger(VersionedMapper.class.getName());
 
-    protected static JsonSchema getSchema(String version, Map<String, JsonSchema> schemas) {
+    protected static Schema getSchema(String version, Map<String, Schema> schemas) {
         if (schemas.containsKey(version)) {
             return schemas.get(version);
         }
